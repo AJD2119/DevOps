@@ -34,8 +34,8 @@ jobs:
         uses: sonarsource/sonarcloud-github-action@v2
         with:
           args: >
-            -Dsonar.projectKey=<YOUR_PROJECT_KEY>
-            -Dsonar.organization=<YOUR_ORG_KEY>  
+            -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
+            -Dsonar.organization=${{ secrets.SONAR_ORG_KEY }}
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  # Token stored in GitHub secrets
 
