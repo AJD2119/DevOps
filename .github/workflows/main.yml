@@ -1,7 +1,6 @@
 name: CI devops 2025
 
 on:
-  # Trigger the workflow when pushing or creating PRs to main or develop
   push:
     branches: [ "main", "develop" ]
   pull_request:
@@ -23,6 +22,15 @@ jobs:
 
       - name: Build and test with Maven
         run: mvn -f myapi/pom.xml clean verify
+
+      - name: SonarCloud Scan
+        uses: sonarsource/sonarcloud-github-action@v2
+        with:
+          args: >
+            -Dsonar.projectKey=<YOUR_PROJECT_KEY>
+            -Dsonar.organization=<YOUR_ORG_KEY>
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   build-and-push-docker-image:
     needs: test-backend
