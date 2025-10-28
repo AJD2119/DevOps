@@ -87,14 +87,20 @@ jobs:
 
       - name: Add SSH private key
         run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.ANSIBLE_PRIVATE_KEY }}" | tr -d '\r' > ~id_rsa
-          chmod 600 ~id_rsa
-          ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> ~known_hosts
+          mkdir -p $HOME/.ssh
+          echo "${{ secrets.ANSIBLE_PRIVATE_KEY }}" | tr -d '\r' > $HOME/.ssh/id_rsa
+          chmod 600 $HOME/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> $HOME/.ssh/known_hosts
+
+      - name: Debug SSH key
+        run: |
+          echo "Verifying SSH key presence..."
+          ls -la $HOME/.ssh
+          head -5 $HOME/.ssh/id_rsa || echo "SSH key missing!"
 
       - name: Run Ansible playbook
         env:
           ANSIBLE_HOST_KEY_CHECKING: "False"
         run: |
           ansible-playbook -i ansible/inventories/setup.yml ansible/playbook.yml \
-            --private-key ~id_rsa -u admin
+            --private-key $HOME/.ssh/id_rsa -u admin
