@@ -102,5 +102,5 @@ jobs:
         env:
           ANSIBLE_HOST_KEY_CHECKING: "False"
         run: |
-          ansible-playbook -i ansible-tp/inventories/setup.yml ansible-tp/playbook.yml \
+          ansible-playbook -i ansible/inventories/setup.yml ansible-tp/playbook.yml \
             --private-key ~/.ssh/id_rsa -u admin
