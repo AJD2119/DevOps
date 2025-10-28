@@ -100,5 +100,5 @@ jobs:
           ANSIBLE_HOST_KEY_CHECKING: "False"
         run: |
           ansible-playbook -i ansible/inventories/setup.yml ansible/playbook.yml \
-            -u ${{ secrets.SERVER_USER }} \
+            -u ${{ secrets.SERVER_HOST }} \
             --private-key ~/.ssh/id_rsa
