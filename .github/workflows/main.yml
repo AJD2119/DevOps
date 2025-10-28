@@ -90,6 +90,12 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts
 
+      - name: Debug SSH key
+        run: |
+          echo "Verifying SSH key presence..."
+          ls -la ~/.ssh
+          head -5 ~/.ssh/id_rsa || echo "SSH key missing!"
+
       - name: Install Ansible
         run: |
           sudo apt-get update
@@ -100,5 +106,4 @@ jobs:
           ANSIBLE_HOST_KEY_CHECKING: "False"
         run: |
           ansible-playbook -i ansible/inventories/setup.yml ansible/playbook.yml \
-            -u ${{ secrets.SERVER_HOST }} \
             --private-key ~/.ssh/id_rsa
