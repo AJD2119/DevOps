@@ -1,0 +1,22 @@
+---
+- name: Pull mydatabase image from DockerHub
+  docker_image:
+    name: ajd2119/tp-devops-mydatabase
+    tag: latest
+    source: pull
+
+- name: Run PostgreSQL container
+  docker_container:
+    name: mydatabase
+    image: ajd2119/tp-devops-mydatabase:latest
+    restart_policy: always
+    networks:
+      - name: app-network
+    env:
+      POSTGRES_DB: db
+      POSTGRES_USER: usr
+      POSTGRES_PASSWORD: pwd
+    volumes:
+      - /home/admin/data:/var/lib/postgresql/data
+    published_ports:
+      - "5432:5432"

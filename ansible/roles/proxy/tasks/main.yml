@@ -1,0 +1,16 @@
+---
+- name: Pull myhttpcontainer image from DockerHub
+  docker_image:
+    name: ajd2119/tp-devops-myhttpcontainer
+    tag: latest
+    source: pull
+
+- name: Run HTTPD container
+  docker_container:
+    name: myhttpcontainer
+    image: ajd2119/tp-devops-myhttpcontainer:latest
+    restart_policy: always
+    networks:
+      - name: app-network
+    published_ports:
+      - "80:80"
