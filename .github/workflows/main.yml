@@ -82,25 +82,18 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y python3-pip
-          python3 -m pip install --upgrade pip
-          python3 -m pip install ansible
+          pip install ansible
 
       - name: Add SSH private key
         run: |
-          mkdir -p $HOME/.ssh
-          echo "${{ secrets.ANSIBLE_PRIVATE_KEY }}" | tr -d '\r' > $HOME/.ssh/id_rsa
-          chmod 600 $HOME/.ssh/id_rsa
-          ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> $HOME/.ssh/known_hosts
-
-      - name: Debug SSH key
-        run: |
-          echo "Verifying SSH key presence..."
-          ls -la $HOME/.ssh
-          head -5 $HOME/.ssh/id_rsa || echo "SSH key missing!"
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" | tr -d '\r' > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts
 
       - name: Run Ansible playbook
         env:
           ANSIBLE_HOST_KEY_CHECKING: "False"
         run: |
           ansible-playbook -i ansible/inventories/setup.yml ansible/playbook.yml \
-            --private-key $HOME/.ssh/id_rsa -u admin
+            --private-key ~/.ssh/id_rsa -u admin
