@@ -86,7 +86,11 @@ jobs:
       - name: Set up SSH key
         run: |
           mkdir -p $HOME/.ssh
-          echo "${{ secrets.ANSIBLE_PRIVATE_KEY }}" | tr -d '\r' > $HOME/.ssh/id_rsa
+          # Write original key from secret
+          echo "${{ secrets.ANSIBLE_PRIVATE_KEY }}" | tr -d '\r' > $HOME/.ssh/id_rsa.pkcs8
+          # Convert PKCS#8 to OpenSSH format
+          ssh-keygen -p -m PEM -f $HOME/.ssh/id_rsa.pkcs8 -N "" -P ""
+          mv $HOME/.ssh/id_rsa.pkcs8 $HOME/.ssh/id_rsa
           chmod 600 $HOME/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> $HOME/.ssh/known_hosts
 
